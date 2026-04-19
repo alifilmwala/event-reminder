@@ -59,94 +59,107 @@ export function GuestCard({
         className="w-full overflow-hidden shadow-2xl"
         style={{ backgroundImage: "url('/bg-pattern.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
-        {/* Gold top border */}
-        <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #3a2a08, #c9a84c, #d4a843, #c9a84c, #3a2a08)' }} />
+        {/* Dark overlay for legibility */}
+        <div style={{ background: 'linear-gradient(160deg, rgba(5,14,8,0.88) 0%, rgba(10,24,12,0.82) 100%)' }}>
 
-        <div className="px-8 py-8 flex flex-col gap-5">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Star size={14} className="text-brand-400" fill="currentColor" />
-              <span className="text-[10px] font-semibold text-brand-500/80 uppercase tracking-[0.25em]">
-                Event Reminder
+          {/* Gold top border */}
+          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #3a2a08, #c9a84c, #d4a843, #c9a84c, #3a2a08)' }} />
+
+          <div className="px-8 py-8 flex flex-col gap-5">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Star size={14} style={{ color: '#c9a84c' }} fill="#c9a84c" />
+                <span className="text-[10px] font-semibold uppercase tracking-[0.25em]" style={{ color: '#c9a84c99' }}>
+                  Event Reminder
+                </span>
+              </div>
+              <Star size={14} style={{ color: '#c9a84c55' }} fill="#c9a84c55" />
+            </div>
+
+            {/* Gold divider */}
+            <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c80, transparent)' }} />
+
+            {/* Event name */}
+            <div className="text-center">
+              <h2
+                className="text-xl font-bold uppercase tracking-widest font-display"
+                style={{ color: '#c9a84c' }}
+              >
+                {eventName}
+              </h2>
+            </div>
+
+            {/* Gold divider */}
+            <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c80, transparent)' }} />
+
+            {/* Guest greeting */}
+            <div className="text-center">
+              <p className="text-[10px] uppercase tracking-[0.35em]" style={{ color: '#6fcf97' }}>Dear</p>
+              <p className="text-3xl font-bold mt-2" style={{ color: '#f5f0e8' }}>{guestName}</p>
+              <p className="text-xs mt-2 tracking-wider" style={{ color: '#6fcf97' }}>
+                We look forward to welcoming you
+              </p>
+            </div>
+
+            {/* Gold divider */}
+            <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c50, transparent)' }} />
+
+            {/* Table number */}
+            <div
+              className="flex flex-col items-center py-6"
+              style={{ border: '1px solid rgba(201,168,76,0.3)', background: 'rgba(201,168,76,0.06)' }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Users size={13} style={{ color: '#c9a84c' }} />
+                <span className="text-[10px] font-semibold uppercase tracking-[0.3em]" style={{ color: '#c9a84c80' }}>
+                  Your Table
+                </span>
+              </div>
+              <span
+                className="text-7xl font-black tracking-tight"
+                style={{ color: '#c9a84c', textShadow: '0 0 40px rgba(201,168,76,0.4)' }}
+              >
+                {tableNumber}
               </span>
             </div>
-            <Star size={14} className="text-brand-700" fill="currentColor" />
-          </div>
 
-          {/* Gold divider */}
-          <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c60, transparent)' }} />
+            {/* Gold divider */}
+            <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c50, transparent)' }} />
 
-          {/* Event name */}
-          <div className="text-center">
-            <h2
-              className="text-xl font-bold uppercase tracking-widest"
-              style={{ color: '#c9a84c' }}
-            >
-              {eventName}
-            </h2>
-          </div>
+            {/* Event details */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3 text-sm" style={{ color: '#a8e4c0' }}>
+                <CalendarDays size={14} style={{ color: '#c9a84c80' }} className="flex-shrink-0" />
+                <span>{eventDate} &nbsp;&middot;&nbsp; {eventTime}</span>
+              </div>
+              {eventVenue && (
+                <div className="flex items-center gap-3 text-sm" style={{ color: '#a8e4c0' }}>
+                  <MapPin size={14} style={{ color: '#c9a84c80' }} className="flex-shrink-0" />
+                  <span>{eventVenue}</span>
+                </div>
+              )}
+            </div>
 
-          {/* Gold divider */}
-          <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c60, transparent)' }} />
-
-          {/* Guest greeting */}
-          <div className="text-center">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-forest-500">Dear</p>
-            <p className="text-3xl font-bold text-green-50 mt-1">{guestName}</p>
-            <p className="text-forest-500 text-xs mt-2 tracking-wider">
-              We look forward to welcoming you
+            {/* Footer */}
+            <p className="text-center text-[10px] uppercase tracking-[0.25em] mt-1" style={{ color: '#3db876' }}>
+              Please carry this reminder to the venue
             </p>
           </div>
 
-          {/* Table number */}
-          <div
-            className="flex flex-col items-center py-5 border"
-            style={{ borderColor: '#c9a84c40', background: 'rgba(201,168,76,0.05)' }}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Users size={13} style={{ color: '#c9a84c' }} />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.25em]" style={{ color: '#c9a84c80' }}>Your Table</span>
-            </div>
-            <span
-              className="text-6xl font-black tracking-tight"
-              style={{ color: '#c9a84c' }}
-            >
-              {tableNumber}
-            </span>
-          </div>
+          {/* Gold bottom border */}
+          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #3a2a08, #c9a84c, #d4a843, #c9a84c, #3a2a08)' }} />
 
-          {/* Event details */}
-          <div className="flex flex-col gap-2.5">
-            <div className="flex items-center gap-3 text-sm text-forest-400">
-              <CalendarDays size={14} style={{ color: '#c9a84c80' }} className="flex-shrink-0" />
-              <span>{eventDate} &nbsp;Â·&nbsp; {eventTime}</span>
-            </div>
-            {eventVenue && (
-              <div className="flex items-center gap-3 text-sm text-forest-400">
-                <MapPin size={14} style={{ color: '#c9a84c80' }} className="flex-shrink-0" />
-                <span>{eventVenue}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          <p className="text-center text-[10px] uppercase tracking-[0.2em] text-forest-700 mt-1">
-            Please carry this reminder to the venue
-          </p>
         </div>
-
-        {/* Gold bottom border */}
-        <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #3a2a08, #c9a84c, #d4a843, #c9a84c, #3a2a08)' }} />
       </div>
 
       {/* Download button */}
       <Button onClick={downloadCard} loading={saving} size="lg" className="w-full max-w-xs shadow-lg">
         <Download size={16} />
-        {saving ? 'Generatingâ€¦' : 'Download Reminder Card'}
+        {saving ? 'Generating…' : 'Download Reminder Card'}
       </Button>
 
-      <p className="text-xs text-forest-700 text-center max-w-xs tracking-wider uppercase">
+      <p className="text-xs text-center max-w-xs tracking-widest uppercase" style={{ color: '#3db876' }}>
         Save this card and present it at the entrance
       </p>
     </div>

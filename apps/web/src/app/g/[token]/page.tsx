@@ -45,17 +45,22 @@ export default async function GuestPage({ params }: PageProps) {
   const eventTime = format(new Date(event.date), 'h:mm a');
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-12"
+    <main
+      className="min-h-screen flex items-center justify-center px-4 py-12 relative"
       style={{ backgroundImage: "url('/bg-pattern.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}
     >
-      <GuestCard
-        guestName={guest.name}
-        tableNumber={guest.tableNumber}
-        eventName={event.name}
-        eventDate={eventDate}
-        eventTime={eventTime}
-        eventVenue={event.venue}
-      />
+      {/* Dark overlay on page background */}
+      <div className="absolute inset-0" style={{ background: 'rgba(4,10,5,0.72)' }} aria-hidden="true" />
+      <div className="relative z-10 w-full max-w-md">
+        <GuestCard
+          guestName={guest.name}
+          tableNumber={guest.tableNumber}
+          eventName={event.name}
+          eventDate={eventDate}
+          eventTime={eventTime}
+          eventVenue={event.venue}
+        />
+      </div>
     </main>
   );
 }
