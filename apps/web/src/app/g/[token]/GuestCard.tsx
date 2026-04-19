@@ -128,10 +128,6 @@ export function GuestCard({
               )}
             </div>
 
-            {/* Footer */}
-            <p className="text-center text-[10px] uppercase tracking-[0.25em] mt-1" style={{ color: '#3db876' }}>
-              Please carry this reminder to the venue
-            </p>
           </div>
 
           {/* Gold bottom border */}
