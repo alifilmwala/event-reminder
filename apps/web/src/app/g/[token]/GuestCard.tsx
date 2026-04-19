@@ -5,7 +5,7 @@
  * Deep green + gold palette.
  */
 import { useRef, useState } from 'react';
-import { CalendarDays, MapPin, Users, Download, Star } from 'lucide-react';
+import { CalendarDays, MapPin, Users, Download } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 interface GuestCardProps {
@@ -66,19 +66,6 @@ export function GuestCard({
           <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #3a2a08, #c9a84c, #d4a843, #c9a84c, #3a2a08)' }} />
 
           <div className="px-8 py-8 flex flex-col gap-5">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Star size={14} style={{ color: '#c9a84c' }} fill="#c9a84c" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.25em]" style={{ color: '#c9a84c99' }}>
-                  Event Reminder
-                </span>
-              </div>
-              <Star size={14} style={{ color: '#c9a84c55' }} fill="#c9a84c55" />
-            </div>
-
-            {/* Gold divider */}
-            <div className="h-px" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c80, transparent)' }} />
 
             {/* Event name */}
             <div className="text-center">
@@ -113,7 +100,7 @@ export function GuestCard({
               <div className="flex items-center gap-2 mb-3">
                 <Users size={13} style={{ color: '#c9a84c' }} />
                 <span className="text-[10px] font-semibold uppercase tracking-[0.3em]" style={{ color: '#c9a84c80' }}>
-                  Your Table
+                  Your Thaal
                 </span>
               </div>
               <span

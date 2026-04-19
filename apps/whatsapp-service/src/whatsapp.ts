@@ -173,7 +173,7 @@ class WhatsAppManager {
     return (
       `Hello *${name}* 👋\n\n` +
       `We look forward to seeing you at our upcoming event!\n\n` +
-      `🪑 *Your Table Number: ${tableNumber}*\n\n` +
+      `🪑 *Your Thaal Number: ${tableNumber}*\n\n` +
       `Open your personalized reminder card:\n` +
       `${link}\n\n` +
       `_Please save this message for reference at the venue._`
