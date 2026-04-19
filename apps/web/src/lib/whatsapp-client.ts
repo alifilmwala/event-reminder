@@ -20,31 +20,40 @@ async function call<T>(
   method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   path: string,
   body?: unknown,
+  retries = 2,
 ): Promise<ServiceResponse<T>> {
   const url     = `${BASE_URL}${path}`;
   const bodyStr = body ? JSON.stringify(body) : '';
   const sig     = signPayload(bodyStr, SECRET);
 
-  try {
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json', 'X-Signature': sig },
-      body: bodyStr || undefined,
-      signal: AbortSignal.timeout(15_000),
-    });
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'X-Signature': sig },
+        body: bodyStr || undefined,
+        signal: AbortSignal.timeout(30_000),
+      });
 
-    const json = await res.json() as T & { error?: string };
+      const json = await res.json() as T & { error?: string };
 
-    if (!res.ok) {
-      logger.warn('WhatsApp service error', { path, status: res.status });
-      return { ok: false, error: (json as { error?: string }).error ?? `HTTP ${res.status}` };
+      if (!res.ok) {
+        logger.warn('WhatsApp service error', { path, status: res.status });
+        return { ok: false, error: (json as { error?: string }).error ?? `HTTP ${res.status}` };
+      }
+      return { ok: true, data: json };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      if (attempt < retries) {
+        logger.warn('WhatsApp service call failed, retrying', { path, attempt: attempt + 1, error: msg });
+        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        continue;
+      }
+      logger.error('WhatsApp service unreachable', { path, error: msg });
+      return { ok: false, error: msg };
     }
-    return { ok: true, data: json };
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Unknown error';
-    logger.error('WhatsApp service unreachable', { path, error: msg });
-    return { ok: false, error: msg };
   }
+  return { ok: false, error: 'Max retries exceeded' };
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
