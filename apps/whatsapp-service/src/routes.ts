@@ -73,6 +73,12 @@ router.get('/groups', requireSignature, async (_req, res) => {
   res.json({ groups: result.groups });
 });
 
+// Force-refresh the groups cache
+router.post('/groups/refresh', requireSignature, (_req, res) => {
+  whatsapp.clearGroupsCache();
+  res.json({ ok: true, message: 'Groups cache cleared. Next /groups call will re-fetch.' });
+});
+
 // Send to a single guest (all data provided by the web app)
 // Responds immediately with { queued: true } and processes in the background,
 // then calls back to the web app's internal API to update message status.

@@ -87,6 +87,6 @@ export const whatsappClient = {
 
   /** Fetch all WhatsApp groups with participants for guest import. */
   getGroups(): Promise<ServiceResponse<{ groups: Array<{ id: string; name: string; participants: Array<{ id: string; mobile: string; isAdmin: boolean }> }> }>> {
-    return call('GET', '/groups', undefined, 0, 25_000);
+    return call('GET', '/groups');
   },
 };

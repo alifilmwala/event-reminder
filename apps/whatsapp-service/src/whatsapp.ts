@@ -73,6 +73,8 @@ class WhatsAppManager {
   private status: WAStatus  = 'INITIALIZING';
   private qrBase64: string | null = null;
   private phone: string | null    = null;
+  private groupsCache: GroupInfo[] | null = null;
+  private groupsFetching = false;
 
   constructor() {
     const chromePath = process.env.CHROME_EXECUTABLE_PATH
@@ -129,12 +131,15 @@ class WhatsAppManager {
     this.client.on('ready', async () => {
       this.status   = 'CONNECTED';
       this.qrBase64 = null;
+      this.groupsCache = null;
       try {
         this.phone = this.client.info.wid.user;
         logger.info('WhatsApp ready', { phone: this.phone });
       } catch {
         logger.info('WhatsApp ready');
       }
+      // Pre-fetch groups in background so they are cached before first request
+      void this.fetchAndCacheGroups();
     });
 
     this.client.on('disconnected', (reason) => {
@@ -179,45 +184,64 @@ class WhatsAppManager {
     return this.status === 'CONNECTED';
   }
 
-  /**
-   * Fetch all WhatsApp groups and their participants.
-   * Returns groups whose names look like table references (contain a number).
-   */
-  async getGroups(): Promise<{ ok: boolean; groups?: GroupInfo[]; error?: string }> {
-    if (!this.isReady()) {
-      return { ok: false, error: 'WhatsApp client not connected.' };
-    }
+  /** Internal: fetch all groups from WhatsApp and store in cache. */
+  private async fetchAndCacheGroups(): Promise<void> {
+    if (this.groupsFetching) return;
+    this.groupsFetching = true;
     try {
-      // getChats() can hang indefinitely if the browser is unresponsive — cap at 20s
+      logger.info('Pre-fetching WhatsApp groups…');
       const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('getChats() timed out after 20s')), 20_000),
+        setTimeout(() => reject(new Error('getChats() timed out after 60s')), 60_000),
       );
-
       const chats = await Promise.race([this.client.getChats(), timeoutPromise]);
       const groups: GroupInfo[] = [];
 
       for (const chat of chats) {
         if (!chat.isGroup) continue;
         const groupChat = chat as import('whatsapp-web.js').GroupChat;
-        const participants = groupChat.participants ?? [];
-
         groups.push({
-          id:           groupChat.id._serialized,
-          name:         groupChat.name,
-          participants: participants.map((p) => ({
-            id:     p.id._serialized,
-            mobile: p.id.user,
+          id:   groupChat.id._serialized,
+          name: groupChat.name,
+          participants: (groupChat.participants ?? []).map((p) => ({
+            id:      p.id._serialized,
+            mobile:  p.id.user,
             isAdmin: p.isAdmin ?? false,
           })),
         });
       }
 
-      return { ok: true, groups };
+      this.groupsCache = groups;
+      logger.info('Groups cached', { count: groups.length });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      logger.warn('getGroups failed', { error: msg });
-      return { ok: false, error: msg };
+      logger.warn('Failed to pre-fetch groups', { error: err instanceof Error ? err.message : String(err) });
+    } finally {
+      this.groupsFetching = false;
     }
+  }
+
+  /**
+   * Return cached groups. If cache is empty (e.g. first call before ready event
+   * finished pre-fetching), triggers a fresh fetch and waits for it.
+   */
+  async getGroups(): Promise<{ ok: boolean; groups?: GroupInfo[]; error?: string }> {
+    if (!this.isReady()) {
+      return { ok: false, error: 'WhatsApp client not connected.' };
+    }
+    // If cache is already populated, return immediately
+    if (this.groupsCache !== null) {
+      return { ok: true, groups: this.groupsCache };
+    }
+    // Cache miss — fetch now (also covers the race where ready just fired)
+    await this.fetchAndCacheGroups();
+    if (this.groupsCache !== null) {
+      return { ok: true, groups: this.groupsCache };
+    }
+    return { ok: false, error: 'Failed to fetch groups. Check Railway logs.' };
+  }
+
+  /** Invalidate group cache (call after a group is joined/left). */
+  clearGroupsCache(): void {
+    this.groupsCache = null;
   }
 
   // ── Messaging ─────────────────────────────────────────────────────────────
