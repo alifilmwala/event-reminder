@@ -37,8 +37,6 @@ ENV NODE_ENV=production
 # In Railway: add a Volume mounted at /data and set WA_SESSION_PATH=/data
 ENV WA_SESSION_PATH=/data
 
-VOLUME ["/data"]
-
 EXPOSE 3001
 
 CMD ["node", "dist/index.js"]
