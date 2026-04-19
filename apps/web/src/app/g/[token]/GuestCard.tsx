@@ -57,7 +57,7 @@ export function GuestCard({
       <div
         ref={cardRef}
         className="w-full overflow-hidden shadow-2xl"
-        style={{ background: 'linear-gradient(160deg, #071a0f 0%, #0f2419 50%, #071a0f 100%)' }}
+        style={{ backgroundImage: "url('/bg-pattern.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         {/* Gold top border */}
         <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #3a2a08, #c9a84c, #d4a843, #c9a84c, #3a2a08)' }} />
@@ -153,11 +153,6 @@ export function GuestCard({
   );
 }
 
-
-interface GuestCardProps {
-  guestName: string;
-  tableNumber: string;
-  eventName: string;
   eventDate: string;
   eventTime: string;
   eventVenue: string;

@@ -46,7 +46,7 @@ export default async function GuestPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-12"
-      style={{ background: 'radial-gradient(ellipse at 50% 0%, #0a2918 0%, #071a0f 70%)' }}
+      style={{ backgroundImage: "url('/bg-pattern.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}
     >
       <GuestCard
         guestName={guest.name}

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${cinzel.variable} font-sans bg-surface-muted text-green-50 antialiased`}>
+      <body className={`${inter.variable} ${cinzel.variable} font-sans text-green-50 antialiased`} style={{ backgroundImage: "url('/bg-pattern.jpg')", backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundPosition: 'center' }}>
         {children}
         <Toaster
           position="top-right"
