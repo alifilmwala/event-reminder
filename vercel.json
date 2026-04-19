@@ -4,7 +4,7 @@
   "installCommand": "npm install --include=dev",
   "framework": "nextjs",
   "functions": {
-    "apps/web/src/app/api/**": {
+    "api/**": {
       "maxDuration": 60
     }
   }
