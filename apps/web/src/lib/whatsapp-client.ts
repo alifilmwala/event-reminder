@@ -21,6 +21,7 @@ async function call<T>(
   path: string,
   body?: unknown,
   retries = 2,
+  timeoutMs = 10_000,
 ): Promise<ServiceResponse<T>> {
   const url     = `${BASE_URL}${path}`;
   const bodyStr = body ? JSON.stringify(body) : '';
@@ -32,7 +33,7 @@ async function call<T>(
         method,
         headers: { 'Content-Type': 'application/json', 'X-Signature': sig },
         body: bodyStr || undefined,
-        signal: AbortSignal.timeout(10_000),
+        signal: AbortSignal.timeout(timeoutMs),
       });
 
       const json = await res.json() as T & { error?: string };
@@ -86,6 +87,6 @@ export const whatsappClient = {
 
   /** Fetch all WhatsApp groups with participants for guest import. */
   getGroups(): Promise<ServiceResponse<{ groups: Array<{ id: string; name: string; participants: Array<{ id: string; mobile: string; isAdmin: boolean }> }> }>> {
-    return call('GET', '/groups');
+    return call('GET', '/groups', undefined, 0, 25_000);
   },
 };

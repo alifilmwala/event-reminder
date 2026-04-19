@@ -188,7 +188,12 @@ class WhatsAppManager {
       return { ok: false, error: 'WhatsApp client not connected.' };
     }
     try {
-      const chats = await this.client.getChats();
+      // getChats() can hang indefinitely if the browser is unresponsive — cap at 20s
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('getChats() timed out after 20s')), 20_000),
+      );
+
+      const chats = await Promise.race([this.client.getChats(), timeoutPromise]);
       const groups: GroupInfo[] = [];
 
       for (const chat of chats) {
@@ -201,7 +206,7 @@ class WhatsAppManager {
           name:         groupChat.name,
           participants: participants.map((p) => ({
             id:     p.id._serialized,
-            mobile: p.id.user,        // numeric phone without @c.us
+            mobile: p.id.user,
             isAdmin: p.isAdmin ?? false,
           })),
         });
@@ -210,6 +215,7 @@ class WhatsAppManager {
       return { ok: true, groups };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
+      logger.warn('getGroups failed', { error: msg });
       return { ok: false, error: msg };
     }
   }
