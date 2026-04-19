@@ -4,6 +4,7 @@ FROM node:20-slim AS builder
 WORKDIR /app
 
 COPY apps/whatsapp-service/package*.json ./
+COPY package-lock.json ./
 # Install all deps (including devDeps for tsc)
 RUN npm ci --legacy-peer-deps
 
@@ -40,6 +41,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY apps/whatsapp-service/package*.json ./
+COPY package-lock.json ./
 # Production deps only
 RUN npm ci --omit=dev --legacy-peer-deps
 
