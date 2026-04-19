@@ -40,8 +40,9 @@ export async function POST(req: NextRequest, { params }: Params) {
     });
 
     if (result.ok) {
-      await updateMessage(message.id, { status: 'SENT', sentAt: new Date().toISOString() });
-      return NextResponse.json({ sent: true, messageId: message.id });
+      // Railway responds immediately with { queued: true } — status will be
+      // updated asynchronously via the internal callback from the service.
+      return NextResponse.json({ queued: true, messageId: message.id });
     } else {
       await updateMessage(message.id, { status: 'FAILED', errorMsg: result.error });
       logger.warn('WhatsApp resend failed', { guestId: params.id, error: result.error });

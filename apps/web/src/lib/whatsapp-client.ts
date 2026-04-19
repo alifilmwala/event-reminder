@@ -32,7 +32,7 @@ async function call<T>(
         method,
         headers: { 'Content-Type': 'application/json', 'X-Signature': sig },
         body: bodyStr || undefined,
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(10_000),
       });
 
       const json = await res.json() as T & { error?: string };

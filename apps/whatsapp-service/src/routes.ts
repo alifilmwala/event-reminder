@@ -64,7 +64,9 @@ router.get('/qr', (_req, res) => {
 });
 
 // Send to a single guest (all data provided by the web app)
-router.post('/send/:guestId', requireSignature, async (req, res) => {
+// Responds immediately with { queued: true } and processes in the background,
+// then calls back to the web app's internal API to update message status.
+router.post('/send/:guestId', requireSignature, (req, res) => {
   const { guestId } = req.params;
   const { name, tableNumber, link, mobile, messageId } = req.body as {
     name:        string;
@@ -79,15 +81,20 @@ router.post('/send/:guestId', requireSignature, async (req, res) => {
     return;
   }
 
-  const result = await whatsapp.sendMessage(mobile, name, tableNumber, link);
+  // Respond immediately — send is fire-and-forget, status updated via callback
+  res.json({ queued: true });
 
-  // Status is updated via the internal web-app callback inside sendBatch.
-  // For single sends the caller (web app) updates status via /api/internal/message/:id.
-  if (result.ok) {
-    res.json({ ok: true });
-  } else {
-    res.status(502).json({ ok: false, error: result.error });
-  }
+  // Process in the background
+  (async () => {
+    await updateMessageStatus(messageId, 'SENDING', null, null);
+    const result = await whatsapp.sendMessage(mobile, name, tableNumber, link);
+    if (result.ok) {
+      await updateMessageStatus(messageId, 'SENT', new Date().toISOString(), null);
+    } else {
+      logger.warn('Single send failed', { guestId, error: result.error });
+      await updateMessageStatus(messageId, 'FAILED', null, result.error ?? 'Unknown error');
+    }
+  })().catch((err) => logger.error('Single send background error', { guestId, error: err }));
 });
 
 // Trigger batch send — web app provides full guest list with pre-created message IDs
