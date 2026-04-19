@@ -27,6 +27,18 @@ export interface GuestBatchItem {
   link:        string;
 }
 
+export interface GroupParticipant {
+  id:      string;
+  mobile:  string;
+  isAdmin: boolean;
+}
+
+export interface GroupInfo {
+  id:           string;
+  name:         string;
+  participants: GroupParticipant[];
+}
+
 // ─── Web-API callbacks ────────────────────────────────────────────────────────
 
 const WEB_APP_URL = process.env.WEB_APP_URL ?? 'http://localhost:3000';
@@ -165,6 +177,41 @@ class WhatsAppManager {
 
   isReady(): boolean {
     return this.status === 'CONNECTED';
+  }
+
+  /**
+   * Fetch all WhatsApp groups and their participants.
+   * Returns groups whose names look like table references (contain a number).
+   */
+  async getGroups(): Promise<{ ok: boolean; groups?: GroupInfo[]; error?: string }> {
+    if (!this.isReady()) {
+      return { ok: false, error: 'WhatsApp client not connected.' };
+    }
+    try {
+      const chats = await this.client.getChats();
+      const groups: GroupInfo[] = [];
+
+      for (const chat of chats) {
+        if (!chat.isGroup) continue;
+        const groupChat = chat as import('whatsapp-web.js').GroupChat;
+        const participants = groupChat.participants ?? [];
+
+        groups.push({
+          id:           groupChat.id._serialized,
+          name:         groupChat.name,
+          participants: participants.map((p) => ({
+            id:     p.id._serialized,
+            mobile: p.id.user,        // numeric phone without @c.us
+            isAdmin: p.isAdmin ?? false,
+          })),
+        });
+      }
+
+      return { ok: true, groups };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { ok: false, error: msg };
+    }
   }
 
   // ── Messaging ─────────────────────────────────────────────────────────────

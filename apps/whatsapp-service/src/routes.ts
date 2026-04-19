@@ -8,7 +8,7 @@
  */
 import { Router, Request, Response } from 'express';
 import crypto from 'crypto';
-import { whatsapp, type GuestBatchItem, updateMessageStatus } from './whatsapp';
+import { whatsapp, type GuestBatchItem, type GroupInfo, updateMessageStatus } from './whatsapp';
 import { logger } from './logger';
 
 const router = Router();
@@ -61,6 +61,16 @@ router.get('/qr', (_req, res) => {
     return;
   }
   res.json({ qr });
+});
+
+// List all WhatsApp groups with participants (for guest import)
+router.get('/groups', requireSignature, async (_req, res) => {
+  const result = await whatsapp.getGroups();
+  if (!result.ok) {
+    res.status(503).json({ error: result.error });
+    return;
+  }
+  res.json({ groups: result.groups });
 });
 
 // Send to a single guest (all data provided by the web app)

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { UserPlus, Users, Download } from 'lucide-react';
+import { UserPlus, Users, Download, Smartphone } from 'lucide-react';
 import { GuestTable } from '@/components/dashboard/GuestTable';
 import { AddGuestModal } from '@/components/guests/AddGuestModal';
 import { BulkAddModal } from '@/components/guests/BulkAddModal';
@@ -15,6 +15,11 @@ export default function GuestsPage() {
   const [status,       setStatus]       = useState('ALL');
   const [showAdd,      setShowAdd]      = useState(false);
   const [showBulk,     setShowBulk]     = useState(false);
+  const [showGroups,   setShowGroups]   = useState(false);
+  const [groupsData,   setGroupsData]   = useState<Array<{ name: string; tableNumber: string | null; memberCount: number }> | null>(null);
+  const [groupsLoading, setGroupsLoading] = useState(false);
+  const [groupsImporting, setGroupsImporting] = useState(false);
+  const [groupsResult, setGroupsResult] = useState<{ added: number; updated: number } | null>(null);
   const debounceRef                     = useRef<ReturnType<typeof setTimeout>>();
 
   const fetchGuests = useCallback(
@@ -57,6 +62,33 @@ export default function GuestsPage() {
 
   function handleRefresh() {
     void fetchGuests(page, query, status);
+  }
+
+  async function handleOpenGroups() {
+    setShowGroups(true);
+    setGroupsResult(null);
+    setGroupsLoading(true);
+    try {
+      const res  = await fetch('/api/guests/import-groups');
+      const json = await res.json() as { groups: Array<{ name: string; tableNumber: string | null; memberCount: number }> };
+      setGroupsData(json.groups ?? []);
+    } catch {
+      setGroupsData([]);
+    } finally {
+      setGroupsLoading(false);
+    }
+  }
+
+  async function handleImportGroups() {
+    setGroupsImporting(true);
+    try {
+      const res  = await fetch('/api/guests/import-groups', { method: 'POST' });
+      const json = await res.json() as { added: number; updated: number };
+      setGroupsResult(json);
+      handleRefresh();
+    } finally {
+      setGroupsImporting(false);
+    }
   }
 
   async function handleExportCsv() {
@@ -107,6 +139,13 @@ export default function GuestsPage() {
             Export
           </button>
           <button
+            onClick={() => void handleOpenGroups()}
+            className="flex items-center gap-1.5 px-3 py-2 bg-surface hover:bg-surface-hover border border-surface-border rounded text-xs text-forest-300 uppercase tracking-wider transition-colors"
+          >
+            <Smartphone size={14} />
+            Import Groups
+          </button>
+          <button
             onClick={() => setShowBulk(true)}
             className="flex items-center gap-1.5 px-3 py-2 bg-surface hover:bg-surface-hover border border-surface-border rounded text-xs text-forest-300 uppercase tracking-wider transition-colors"
           >
@@ -147,6 +186,69 @@ export default function GuestsPage() {
           onClose={() => setShowBulk(false)}
           onAdded={handleRefresh}
         />
+      )}
+
+      {showGroups && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+          <div className="bg-surface border border-surface-border rounded-lg w-full max-w-lg p-6 space-y-4">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-green-50">Import from WhatsApp Groups</h2>
+
+            {groupsLoading && (
+              <p className="text-xs text-forest-400 animate-pulse">Fetching groups…</p>
+            )}
+
+            {!groupsLoading && groupsData && groupsData.length === 0 && (
+              <p className="text-xs text-red-400">No groups found or WhatsApp not connected.</p>
+            )}
+
+            {!groupsLoading && groupsData && groupsData.length > 0 && !groupsResult && (
+              <>
+                <p className="text-xs text-forest-400">The following groups were found. Groups with a number in the name will be imported.</p>
+                <div className="max-h-60 overflow-y-auto space-y-1">
+                  {groupsData.map((g) => (
+                    <div key={g.name} className="flex items-center justify-between py-1.5 px-2 rounded bg-surface-hover text-xs">
+                      <span className={g.tableNumber ? 'text-green-200' : 'text-forest-500 line-through'}>{g.name}</span>
+                      <span className="text-forest-400">
+                        {g.tableNumber ? `Thaal ${g.tableNumber} · ${g.memberCount} members` : 'skipped (no number)'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={() => setShowGroups(false)}
+                    className="px-4 py-2 text-xs text-forest-400 hover:text-forest-200 transition-colors uppercase tracking-wider"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => void handleImportGroups()}
+                    disabled={groupsImporting}
+                    className="px-4 py-2 bg-brand-500 hover:bg-brand-400 disabled:opacity-50 rounded text-xs text-forest-950 font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {groupsImporting ? 'Importing…' : 'Import All'}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {groupsResult && (
+              <>
+                <p className="text-xs text-green-300">
+                  Import complete — <strong>{groupsResult.added}</strong> new guests added, <strong>{groupsResult.updated}</strong> updated.
+                </p>
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => setShowGroups(false)}
+                    className="px-4 py-2 bg-brand-500 hover:bg-brand-400 rounded text-xs text-forest-950 font-bold uppercase tracking-wider transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

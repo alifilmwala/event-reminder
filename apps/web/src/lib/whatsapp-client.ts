@@ -83,4 +83,9 @@ export const whatsappClient = {
   sendBatch(guests: BatchGuestPayload[]): Promise<ServiceResponse<{ queued: number }>> {
     return call('POST', '/send-batch', { guests });
   },
+
+  /** Fetch all WhatsApp groups with participants for guest import. */
+  getGroups(): Promise<ServiceResponse<{ groups: Array<{ id: string; name: string; participants: Array<{ id: string; mobile: string; isAdmin: boolean }> }> }>> {
+    return call('GET', '/groups');
+  },
 };
