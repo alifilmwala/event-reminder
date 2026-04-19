@@ -49,8 +49,7 @@ COPY --from=builder /app/dist ./dist
 ENV CHROME_EXECUTABLE_PATH=/usr/bin/chromium
 ENV NODE_ENV=production
 
-# Persist WhatsApp session across restarts (mount a Railway volume here)
-VOLUME ["/app/.wwebjs_auth"]
+# Mount a Railway volume at /app/.wwebjs_auth to persist WhatsApp session
 
 EXPOSE 3001
 
