@@ -3,12 +3,12 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY apps/whatsapp-service/package*.json ./
 # Install all deps (including devDeps for tsc)
 RUN npm ci --legacy-peer-deps
 
-COPY tsconfig.json ./
-COPY src ./src
+COPY apps/whatsapp-service/tsconfig.json ./
+COPY apps/whatsapp-service/src ./src
 RUN npm run build
 
 # ── Stage 2: runtime ──────────────────────────────────────────────────────────
@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY apps/whatsapp-service/package*.json ./
 # Production deps only
 RUN npm ci --omit=dev --legacy-peer-deps
 
