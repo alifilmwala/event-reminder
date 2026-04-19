@@ -74,8 +74,8 @@ export default function SchedulePage() {
   return (
     <div className="max-w-2xl space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Schedule Reminders</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <h1 className="text-xl font-bold text-green-50 uppercase tracking-widest">Schedule Reminders</h1>
+        <p className="text-brand-600/70 text-xs mt-1 tracking-wider uppercase">
           Set up automatic WhatsApp reminder batches.
         </p>
       </div>
@@ -86,22 +86,22 @@ export default function SchedulePage() {
         <CardContent>
           <form onSubmit={handleCreate} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-300">Event</label>
+              <label className="text-xs font-semibold text-brand-500/80 uppercase tracking-widest">Event</label>
               <select
                 value={eventId}
                 onChange={(e) => setEventId(e.target.value)}
-                className="py-2 px-3 text-sm bg-slate-900 border border-slate-600 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="py-2 px-3 text-sm bg-surface-muted border border-surface-border rounded text-green-50 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 {events.map((ev) => <option key={ev.id} value={ev.id}>{ev.name}</option>)}
               </select>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-300">Type</label>
+              <label className="text-xs font-semibold text-brand-500/80 uppercase tracking-widest">Type</label>
               <select
                 value={form.type}
                 onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
-                className="py-2 px-3 text-sm bg-slate-900 border border-slate-600 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="py-2 px-3 text-sm bg-surface-muted border border-surface-border rounded text-green-50 focus:outline-none focus:ring-1 focus:ring-brand-500"
               >
                 <option value="REMINDER">Custom Reminder</option>
                 <option value="DAY_BEFORE">1 Day Before Event</option>
@@ -111,14 +111,14 @@ export default function SchedulePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-300">Date &amp; Time</label>
+              <label className="text-xs font-semibold text-brand-500/80 uppercase tracking-widest">Date &amp; Time</label>
               <input
                 type="datetime-local"
                 value={form.scheduledAt}
                 onChange={(e) => setForm((f) => ({ ...f, scheduledAt: e.target.value }))}
                 required
                 min={new Date().toISOString().slice(0, 16)}
-                className="py-2 px-3 text-sm bg-slate-900 border border-slate-600 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="py-2 px-3 text-sm bg-surface-muted border border-surface-border rounded text-green-50 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
 
@@ -138,12 +138,12 @@ export default function SchedulePage() {
               {schedules.map((s) => (
                 <li
                   key={s.id}
-                  className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg border border-slate-700/50"
+                  className="flex items-center justify-between p-3 bg-surface-muted rounded border border-surface-border"
                 >
                   <div className="flex items-center gap-3">
                     <CalendarDays size={16} className="text-brand-400 flex-shrink-0" />
                     <div>
-                      <p className="text-sm text-slate-200 font-medium">
+                      <p className="text-sm text-green-50 font-medium">
                         {typeLabels[s.type] ?? s.type}
                       </p>
                       <p className="text-xs text-slate-500">

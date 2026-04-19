@@ -14,7 +14,7 @@ function BarChart({ data }: { data: { day: string; sent: number }[] }) {
       {data.map((d, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-1">
           <div
-            className="w-full bg-brand-600/70 rounded-t"
+            className="w-full bg-brand-500/60 rounded-t"
             style={{ height: `${(d.sent / max) * 88}px`, minHeight: 4 }}
           />
           <span className="text-[10px] text-slate-500">
@@ -42,8 +42,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Dashboard</h1>
-        <p className="text-slate-400 text-sm mt-1">Overview of all guest reminders</p>
+        <h1 className="text-xl font-bold text-green-50 uppercase tracking-widest">Dashboard</h1>
+        <p className="text-brand-600/70 text-xs mt-1 tracking-wider uppercase">Overview of all guest reminders</p>
       </div>
 
       {/* Stats grid */}
@@ -58,13 +58,13 @@ export default function DashboardPage() {
           title="Sent"
           value={loading ? '—' : (s?.sentCount ?? 0)}
           icon={Send}
-          iconColor="text-emerald-400"
+          iconColor="text-forest-400"
         />
         <StatsCard
           title="Pending"
           value={loading ? '—' : (s?.pendingCount ?? 0)}
           icon={Clock}
-          iconColor="text-amber-400"
+          iconColor="text-brand-300"
         />
         <StatsCard
           title="Failed"

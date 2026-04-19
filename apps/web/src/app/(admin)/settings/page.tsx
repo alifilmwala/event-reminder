@@ -63,7 +63,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 size={24} className="animate-spin text-slate-400" />
+        <Loader2 size={24} className="animate-spin text-brand-400" />
       </div>
     );
   }
@@ -71,20 +71,20 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 animate-fade-in max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Event Settings</h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <h1 className="text-xl font-bold text-green-50 uppercase tracking-widest">Event Settings</h1>
+        <p className="text-brand-600/70 text-xs mt-1 tracking-wider uppercase">
           Configure the event details displayed on guest reminder cards.
         </p>
       </div>
 
-      <form onSubmit={handleSave} className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+      <form onSubmit={handleSave} className="bg-surface border border-surface-border rounded p-6 space-y-5">
         <div className="flex items-center gap-2 mb-2">
           <Settings size={16} className="text-brand-400" />
-          <h2 className="text-slate-200 font-medium text-sm">Event Details</h2>
+          <h2 className="text-brand-400 font-semibold text-xs uppercase tracking-widest">Event Details</h2>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">
+          <label className="block text-xs font-semibold text-brand-500/80 uppercase tracking-widest mb-1.5">
             Event Name <span className="text-red-400">*</span>
           </label>
           <input
@@ -94,12 +94,12 @@ export default function SettingsPage() {
             required
             maxLength={150}
             placeholder="Grand Annual Gala 2026"
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-surface-muted border border-surface-border rounded text-green-50 placeholder-forest-700 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">
+          <label className="block text-xs font-semibold text-brand-500/80 uppercase tracking-widest mb-1.5">
             Date &amp; Time <span className="text-red-400">*</span>
           </label>
           <input
@@ -107,31 +107,32 @@ export default function SettingsPage() {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-surface-muted border border-surface-border rounded text-green-50 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Venue</label>
+          <label className="block text-xs font-semibold text-brand-500/80 uppercase tracking-widest mb-1.5">Venue</label>
           <input
             type="text"
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
             maxLength={200}
             placeholder="The Royal Palace Banquet Hall"
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-surface-muted border border-surface-border rounded text-green-50 placeholder-forest-700 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+          <label className="block text-xs font-semibold text-brand-500/80 uppercase tracking-widest mb-1.5">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
             maxLength={500}
             placeholder="Optional additional note shown on the guest card…"
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-none"
+            className="w-full px-3 py-2 bg-surface-muted border border-surface-border rounded text-green-50 placeholder-forest-700 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none"
           />
         </div>
 
@@ -139,7 +140,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-5 py-2 bg-brand-600 hover:bg-brand-500 disabled:opacity-60 rounded-lg text-sm text-white font-medium transition-colors"
+            className="flex items-center gap-2 px-5 py-2 bg-brand-500 hover:bg-brand-400 disabled:opacity-60 rounded text-xs text-forest-950 font-bold uppercase tracking-widest transition-colors"
           >
             {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
             {saving ? 'Saving…' : 'Save Changes'}
@@ -148,8 +149,8 @@ export default function SettingsPage() {
       </form>
 
       {event && (
-        <p className="text-xs text-slate-500">
-          Event ID: <code className="bg-slate-800 px-1 rounded">{event.id}</code>
+        <p className="text-xs text-forest-700">
+          Event ID: <code className="bg-surface border border-surface-border px-1 rounded">{event.id}</code>
         </p>
       )}
     </div>

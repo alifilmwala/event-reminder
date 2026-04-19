@@ -3,11 +3,11 @@ import { cn } from '@/lib/cn';
 type Variant = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 
 const variantMap: Record<Variant, string> = {
-  success: 'bg-emerald-900/40 text-emerald-300 border border-emerald-700/50',
-  warning: 'bg-amber-900/40  text-amber-300  border border-amber-700/50',
-  danger:  'bg-red-900/40    text-red-300    border border-red-700/50',
-  info:    'bg-blue-900/40   text-blue-300   border border-blue-700/50',
-  neutral: 'bg-slate-700/60  text-slate-300  border border-slate-600/50',
+  success: 'bg-forest-900/60 text-forest-300 border border-forest-700/50',
+  warning: 'bg-brand-950/60  text-brand-400  border border-brand-700/40',
+  danger:  'bg-red-950/60    text-red-400    border border-red-800/50',
+  info:    'bg-forest-900/40 text-forest-300 border border-forest-700/40',
+  neutral: 'bg-surface       text-forest-300 border border-surface-border',
 };
 
 interface BadgeProps {
@@ -20,7 +20,7 @@ export function Badge({ variant = 'neutral', className, children }: BadgeProps) 
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
+        'inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-semibold tracking-wider uppercase',
         variantMap[variant],
         className,
       )}

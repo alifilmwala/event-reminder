@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Zap, Loader2 } from 'lucide-react';
+import { Star, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -42,25 +42,43 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-surface-muted px-4"
+      style={{ backgroundImage: 'radial-gradient(ellipse at 50% 0%, #0a2918 0%, #071a0f 70%)' }}
+    >
+      {/* Decorative top-center gold line */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-0.5 bg-gradient-to-r from-transparent via-brand-500 to-transparent" />
+
       <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="flex flex-col items-center gap-3 mb-8">
-          <div className="p-3 bg-brand-600 rounded-2xl shadow-lg shadow-brand-500/30">
-            <Zap size={28} className="text-white" />
+        {/* Logo / Header */}
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="relative flex items-center justify-center w-16 h-16 rounded-full border-2 border-brand-500/60 bg-surface shadow-lg shadow-brand-900/30">
+            <Star size={24} className="text-brand-400" fill="currentColor" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100">EventReminder</h1>
-          <p className="text-slate-400 text-sm">Sign in to your admin panel</p>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold tracking-wide text-green-50 uppercase">
+              Event Reminder
+            </h1>
+            <p className="text-brand-500/80 text-xs tracking-[0.2em] uppercase mt-1">
+              Admin Portal
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex-1 h-px bg-surface-border" />
+          <span className="text-brand-600 text-xs tracking-widest uppercase">Sign In</span>
+          <div className="flex-1 h-px bg-surface-border" />
         </div>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col gap-4"
+          className="bg-surface border border-surface-border rounded-lg p-6 flex flex-col gap-4 shadow-xl"
           noValidate
         >
           <Input
-            label="Email address"
+            label="Email Address"
             type="email"
             placeholder="admin@example.com"
             value={form.email}
@@ -82,14 +100,15 @@ export default function LoginPage() {
           />
 
           <Button type="submit" loading={loading} size="lg" className="mt-1 w-full">
-            {loading ? 'Signing in…' : 'Sign in'}
+            {loading ? 'Signing in…' : 'Login'}
           </Button>
         </form>
 
-        <p className="text-center text-xs text-slate-600 mt-8">
-          EventReminder Admin v1.0
+        <p className="text-center text-xs text-forest-700 mt-8 tracking-widest uppercase">
+          EventReminder &copy; {new Date().getFullYear()}
         </p>
       </div>
     </main>
   );
 }
+

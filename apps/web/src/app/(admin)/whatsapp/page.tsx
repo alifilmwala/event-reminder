@@ -66,8 +66,8 @@ export default function WhatsAppPage() {
   return (
     <div className="max-w-xl space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">WhatsApp</h1>
-        <p className="text-slate-400 text-sm mt-1">Manage your WhatsApp connection and send reminders.</p>
+        <h1 className="text-xl font-bold text-green-50 uppercase tracking-widest">WhatsApp</h1>
+        <p className="text-brand-600/70 text-xs mt-1 tracking-wider uppercase">Manage your WhatsApp connection and send reminders.</p>
       </div>
 
       {/* Connection status */}

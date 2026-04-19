@@ -38,8 +38,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         if (
-          parsed.data.email    !== adminEmail ||
-          parsed.data.password !== adminPassword
+          parsed.data.email.trim()    !== adminEmail.trim() ||
+          parsed.data.password.trim() !== adminPassword.trim()
         ) {
           return null;
         }

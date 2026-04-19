@@ -45,7 +45,9 @@ export default async function GuestPage({ params }: PageProps) {
   const eventTime = format(new Date(event.date), 'h:mm a');
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center px-4 py-12">
+    <main className="min-h-screen flex items-center justify-center px-4 py-12"
+      style={{ background: 'radial-gradient(ellipse at 50% 0%, #0a2918 0%, #071a0f 70%)' }}
+    >
       <GuestCard
         guestName={guest.name}
         tableNumber={guest.tableNumber}

@@ -1,0 +1,40 @@
+- generic [ref=e3]:
+  - generic [ref=e14]:
+    - generic [ref=e15]:
+      - img "Idaratut Ta'reef Al Shakhsi" [ref=e16]
+      - generic [ref=e17]: IDARATUT TA'REEF AL SHAKHSI
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - spinbutton [active] [ref=e21]
+          - generic: ITS ID
+        - generic [ref=e22]:
+          - textbox "Enter Password" [ref=e23]
+          - generic [ref=e25] [cursor=pointer]: 
+          - generic: Password
+      - generic [ref=e26]:
+        - button "Login ITS" [ref=e27] [cursor=pointer]
+        - button "Login Miqaat" [ref=e28] [cursor=pointer]
+      - generic [ref=e29]:
+        - generic [ref=e31] [cursor=pointer]:
+          - generic [ref=e32]:
+            - checkbox "Remember Me" [ref=e33]
+            - text: check_box_outline_blank
+          - text: Remember Me
+        - link "Forgot Password?" [ref=e35] [cursor=pointer]:
+          - /url: Common/ForgotPassword.aspx
+  - generic [ref=e38]:
+    - link "Privacy Policy" [ref=e39] [cursor=pointer]:
+      - /url: https://www.its52.com/Public/Policy/ITS_Privacy_Policy.html
+    - text: "|"
+    - link "Cookies Policy" [ref=e40] [cursor=pointer]:
+      - /url: https://www.its52.com/Public/Policy/ITS_Cookies_Policy.html
+    - text: "|"
+    - link "SMS Opt In/Out Policy" [ref=e41] [cursor=pointer]:
+      - /url: https://www.its52.com/Public/Policy/ITS_SMS_Opt_InOut_Policy.html
+    - generic [ref=e42]: "|"
+    - link "Mobile License Agreement" [ref=e43] [cursor=pointer]:
+      - /url: https://www.its52.com/Public/Policy/ITS_MobileApplication_EndUser_Licence_Agreement.html
+    - text: "|"
+    - link "Terms & Conditions" [ref=e44] [cursor=pointer]:
+      - /url: https://www.its52.com/Public/Policy/ITS_Terms_Conditions.html

@@ -11,17 +11,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary:   'bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500',
-  secondary: 'bg-slate-700 text-slate-100 hover:bg-slate-600 focus-visible:ring-slate-500',
-  danger:    'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
-  ghost:     'bg-transparent text-slate-300 hover:bg-slate-800 focus-visible:ring-slate-500',
-  outline:   'border border-slate-600 text-slate-300 hover:bg-slate-800 focus-visible:ring-slate-500',
+  primary:   'bg-brand-500 text-forest-950 hover:bg-brand-400 focus-visible:ring-brand-500 font-semibold tracking-wide',
+  secondary: 'bg-surface text-green-100 hover:bg-surface-hover border border-surface-border focus-visible:ring-forest-600',
+  danger:    'bg-red-700 text-white hover:bg-red-600 focus-visible:ring-red-500',
+  ghost:     'bg-transparent text-forest-300 hover:bg-surface focus-visible:ring-forest-600',
+  outline:   'border border-brand-700/60 text-brand-400 hover:bg-brand-500/10 focus-visible:ring-brand-500',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm:  'px-3 py-1.5 text-xs rounded-md',
-  md:  'px-4 py-2   text-sm rounded-lg',
-  lg:  'px-6 py-2.5 text-base rounded-lg',
+  sm:  'px-3 py-1.5 text-xs rounded',
+  md:  'px-4 py-2   text-sm rounded',
+  lg:  'px-6 py-2.5 text-sm rounded uppercase tracking-widest',
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -30,8 +30,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled || loading}
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-medium transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+        'inline-flex items-center justify-center gap-2 font-medium transition-all',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-muted',
         'disabled:pointer-events-none disabled:opacity-50',
         variantClasses[variant],
         sizeClasses[size],

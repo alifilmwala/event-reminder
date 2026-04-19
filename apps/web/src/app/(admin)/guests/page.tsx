@@ -91,8 +91,8 @@ export default function GuestsPage() {
     <div className="space-y-5 animate-fade-in">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Guests</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-xl font-bold text-green-50 uppercase tracking-widest">Guests</h1>
+          <p className="text-brand-600/70 text-xs mt-1 tracking-wider uppercase">
             Manage all guests and their WhatsApp reminder status.
           </p>
         </div>
@@ -101,23 +101,23 @@ export default function GuestsPage() {
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={handleExportCsv}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sm text-slate-300 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 bg-surface hover:bg-surface-hover border border-surface-border rounded text-xs text-forest-300 uppercase tracking-wider transition-colors"
           >
-            <Download size={15} />
+            <Download size={14} />
             Export
           </button>
           <button
             onClick={() => setShowBulk(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sm text-slate-300 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 bg-surface hover:bg-surface-hover border border-surface-border rounded text-xs text-forest-300 uppercase tracking-wider transition-colors"
           >
-            <Users size={15} />
+            <Users size={14} />
             Bulk Add
           </button>
           <button
             onClick={() => setShowAdd(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-brand-600 hover:bg-brand-500 rounded-lg text-sm text-white font-medium transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 bg-brand-500 hover:bg-brand-400 rounded text-xs text-forest-950 font-bold uppercase tracking-wider transition-colors"
           >
-            <UserPlus size={15} />
+            <UserPlus size={14} />
             Add Guest
           </button>
         </div>

@@ -59,18 +59,18 @@ export function GuestTable({
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex gap-2 items-center w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-forest-600" />
             <input
               type="search"
               placeholder="Search name or mobile…"
               onChange={(e) => onSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 text-sm bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full pl-8 pr-3 py-2 text-sm bg-surface-muted border border-surface-border rounded text-green-50 placeholder:text-forest-700 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
 
           <select
             onChange={(e) => onStatusFilter(e.target.value)}
-            className="py-2 px-3 text-sm bg-slate-900 border border-slate-600 rounded-lg text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="py-2 px-3 text-sm bg-surface-muted border border-surface-border rounded text-green-50 focus:outline-none focus:ring-1 focus:ring-brand-500"
           >
             <option value="ALL">All status</option>
             <option value="PENDING">Pending</option>
@@ -79,7 +79,7 @@ export function GuestTable({
           </select>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-forest-500 uppercase tracking-widest">
           <span>{total} guests</span>
           <Button variant="ghost" size="sm" onClick={onRefresh} disabled={isLoading}>
             <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
@@ -88,14 +88,14 @@ export function GuestTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-700">
+      <div className="overflow-x-auto border border-surface-border">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-slate-900/50 border-b border-slate-700">
+            <tr className="bg-surface border-b border-surface-border">
               {['Name', 'Mobile', 'Table', 'Status', 'Sent At', 'Link Opened', 'Actions'].map((h) => (
                 <th
                   key={h}
-                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400"
+                  className="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-brand-600/70"
                 >
                   {h}
                 </th>
@@ -105,13 +105,13 @@ export function GuestTable({
           <tbody>
             {isLoading && guests.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
+                <td colSpan={7} className="px-4 py-10 text-center text-forest-700">
                   Loading…
                 </td>
               </tr>
             ) : guests.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
+                <td colSpan={7} className="px-4 py-10 text-center text-forest-700">
                   No guests found.
                 </td>
               </tr>
@@ -121,12 +121,12 @@ export function GuestTable({
                 return (
                   <tr
                     key={g.id}
-                    className="border-b border-slate-700/50 hover:bg-slate-700/20 transition-colors"
+                    className="border-b border-surface-border hover:bg-surface transition-colors"
                   >
-                    <td className="px-4 py-3 text-slate-100 font-medium">{g.name}</td>
-                    <td className="px-4 py-3 text-slate-300 font-mono text-xs">{g.mobile}</td>
+                    <td className="px-4 py-3 text-green-50 font-medium">{g.name}</td>
+                    <td className="px-4 py-3 text-forest-400 font-mono text-xs">{g.mobile}</td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-0.5 bg-brand-900/40 text-brand-300 rounded-md text-xs font-semibold">
+                      <span className="px-2 py-0.5 bg-brand-950/60 text-brand-400 border border-brand-800/50 rounded text-xs font-semibold">
                         {g.tableNumber}
                       </span>
                     </td>
@@ -137,14 +137,14 @@ export function GuestTable({
                         <Badge variant="warning">PENDING</Badge>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-slate-400 text-xs">
+                    <td className="px-4 py-3 text-forest-500 text-xs">
                       {msg?.sentAt ? format(new Date(msg.sentAt), 'dd MMM, HH:mm') : '—'}
                     </td>
                     <td className="px-4 py-3">
                       {g.linkVisited ? (
-                        <span className="text-emerald-400 text-xs">✓ Opened</span>
+                        <span className="text-forest-400 text-xs tracking-wider uppercase">✓ Opened</span>
                       ) : (
-                        <span className="text-slate-500 text-xs">Not seen</span>
+                        <span className="text-forest-700 text-xs tracking-wider uppercase">Not seen</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -167,7 +167,7 @@ export function GuestTable({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-slate-400">
+        <div className="flex items-center justify-between text-xs text-forest-500 uppercase tracking-wider">
           <span>
             Page {page} of {totalPages}
           </span>
