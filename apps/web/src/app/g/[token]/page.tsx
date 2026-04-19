@@ -51,7 +51,7 @@ export default async function GuestPage({ params }: PageProps) {
     >
       {/* Dark overlay on page background */}
       <div className="absolute inset-0" style={{ background: 'rgba(4,10,5,0.72)' }} aria-hidden="true" />
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center">
         <GuestCard
           guestName={guest.name}
           tableNumber={guest.tableNumber}
