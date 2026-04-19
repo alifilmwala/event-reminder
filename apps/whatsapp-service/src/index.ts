@@ -16,6 +16,9 @@ import { logger } from './logger';
 const PORT = parseInt(process.env.PORT ?? '3001', 10);
 const app  = express();
 
+// Trust Railway/proxy X-Forwarded-For headers for accurate rate limiting
+app.set('trust proxy', 1);
+
 // ─── Security / parsing middleware ─────────────────────────────────────────
 
 // Capture raw body for HMAC verification, then parse JSON from it
