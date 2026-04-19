@@ -1,6 +1,6 @@
 {
   "buildCommand": "cd apps/web && npx prisma generate && npx next build",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "cd apps/web && npm install --ignore-scripts",
+  "installCommand": "npm install --workspace=apps/web --ignore-scripts",
   "framework": "nextjs"
 }
