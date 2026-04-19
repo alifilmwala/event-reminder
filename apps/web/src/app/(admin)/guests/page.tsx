@@ -17,6 +17,7 @@ export default function GuestsPage() {
   const [showBulk,     setShowBulk]     = useState(false);
   const [showGroups,   setShowGroups]   = useState(false);
   const [groupsData,   setGroupsData]   = useState<Array<{ name: string; tableNumber: string | null; memberCount: number }> | null>(null);
+  const [groupsError,  setGroupsError]  = useState<string | null>(null);
   const [groupsLoading, setGroupsLoading] = useState(false);
   const [groupsImporting, setGroupsImporting] = useState(false);
   const [groupsResult, setGroupsResult] = useState<{ added: number; updated: number } | null>(null);
@@ -67,13 +68,19 @@ export default function GuestsPage() {
   async function handleOpenGroups() {
     setShowGroups(true);
     setGroupsResult(null);
+    setGroupsError(null);
+    setGroupsData(null);
     setGroupsLoading(true);
     try {
       const res  = await fetch('/api/guests/import-groups');
-      const json = await res.json() as { groups: Array<{ name: string; tableNumber: string | null; memberCount: number }> };
-      setGroupsData(json.groups ?? []);
+      const json = await res.json() as { groups?: Array<{ name: string; tableNumber: string | null; memberCount: number }>; error?: string };
+      if (!res.ok || json.error) {
+        setGroupsError(json.error ?? 'Failed to fetch groups.');
+      } else {
+        setGroupsData(json.groups ?? []);
+      }
     } catch {
-      setGroupsData([]);
+      setGroupsError('Could not reach the WhatsApp service.');
     } finally {
       setGroupsLoading(false);
     }
@@ -197,8 +204,18 @@ export default function GuestsPage() {
               <p className="text-xs text-forest-400 animate-pulse">Fetching groups…</p>
             )}
 
-            {!groupsLoading && groupsData && groupsData.length === 0 && (
-              <p className="text-xs text-red-400">No groups found or WhatsApp not connected.</p>
+            {!groupsLoading && groupsError && (
+              <div className="space-y-2">
+                <p className="text-xs text-red-400">{groupsError}</p>
+                <p className="text-xs text-forest-500">Go to the <a href="/dashboard/whatsapp" className="text-brand-400 underline">WhatsApp page</a> and scan the QR code to reconnect.</p>
+                <div className="flex justify-end pt-1">
+                  <button onClick={() => setShowGroups(false)} className="px-4 py-2 text-xs text-forest-400 hover:text-forest-200 transition-colors uppercase tracking-wider">Close</button>
+                </div>
+              </div>
+            )}
+
+            {!groupsLoading && !groupsError && groupsData && groupsData.length === 0 && (
+              <p className="text-xs text-red-400">No groups found on this WhatsApp account.</p>
             )}
 
             {!groupsLoading && groupsData && groupsData.length > 0 && !groupsResult && (
