@@ -202,14 +202,19 @@ class WhatsAppManager {
       const result = await (this.client as any).pupPage.evaluate(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const store = (globalThis as any).Store;
+        if (!store) return { error: 'Store not found', totalChats: 0, groups: [] };
+
+        // Backbone.js Collection stores models in .models array
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const allChats: any[] = store?.Chat?.getModelsArray() ?? [];
+        const allChats: any[] = store?.Chat?.models ?? store?.Chat?.getModelsArray?.() ?? [];
+
         const groups = allChats
           .filter((c: any) => c.isGroup)
           .map((c: any) => ({
             id:   c.id?._serialized ?? '',
             name: c.name ?? c.formattedTitle ?? '',
-            participants: (c.groupMetadata?.participants?.getModelsArray?.() ?? [])
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            participants: (c.groupMetadata?.participants?.models ?? c.groupMetadata?.participants?.getModelsArray?.() ?? [])
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               .map((p: any) => ({
                 id:      p.id?._serialized ?? '',
@@ -217,10 +222,11 @@ class WhatsAppManager {
                 isAdmin: p.isAdmin ?? false,
               })),
           }));
+
         return { totalChats: allChats.length, groups };
       });
 
-      logger.info('Store evaluation complete', { totalChats: result.totalChats, groups: result.groups.length });
+      logger.info('Store evaluation complete', { totalChats: result.totalChats, groups: result.groups.length, storeError: result.error ?? null });
       this.groupsCache = result.groups as GroupInfo[];
     } catch (err) {
       logger.warn('Failed to pre-fetch groups', { error: err instanceof Error ? err.message : String(err) });
