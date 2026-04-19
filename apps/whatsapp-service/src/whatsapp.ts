@@ -147,7 +147,7 @@ class WhatsAppManager {
       await this.client.initialize();
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      const cause = err instanceof Error && (err as NodeJS.ErrnoException).cause;
+      const cause = err instanceof Error && (err as Error & { cause?: unknown }).cause;
       logger.error('Failed to initialize WhatsApp client', { error: msg, cause });
       this.status = 'DISCONNECTED';
     }
