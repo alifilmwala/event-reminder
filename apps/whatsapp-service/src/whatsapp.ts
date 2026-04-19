@@ -84,8 +84,12 @@ class WhatsAppManager {
 
     logger.info('Using Chromium', { chromePath });
 
+    // Store session under /data so a Railway Volume persists it across redeploys.
+    // Falls back to the current directory when running locally.
+    const dataPath = process.env.WA_SESSION_PATH ?? process.cwd();
+
     this.client = new Client({
-      authStrategy: new LocalAuth({ clientId: 'event-reminder' }),
+      authStrategy: new LocalAuth({ clientId: 'event-reminder', dataPath }),
       puppeteer: {
         headless: true,
         executablePath: chromePath,

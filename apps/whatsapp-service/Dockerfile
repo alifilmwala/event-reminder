@@ -33,8 +33,11 @@ COPY --from=builder /app/dist ./dist
 # Tell the app where to find Chromium
 ENV CHROME_EXECUTABLE_PATH=/usr/bin/chromium
 ENV NODE_ENV=production
+# WhatsApp session is stored under WA_SESSION_PATH.
+# In Railway: add a Volume mounted at /data and set WA_SESSION_PATH=/data
+ENV WA_SESSION_PATH=/data
 
-# Mount a Railway volume at /app/.wwebjs_auth to persist WhatsApp session
+VOLUME ["/data"]
 
 EXPOSE 3001
 
