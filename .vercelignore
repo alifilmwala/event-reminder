@@ -1,0 +1,19 @@
+# WhatsApp session files — local only, never deploy
+apps/whatsapp-service/.wwebjs_auth
+apps/whatsapp-service/.wwebjs_cache
+
+# env files
+.env
+.env.local
+apps/web/.env
+apps/whatsapp-service/.env
+
+# dev scripts
+apps/web/scripts
+
+# build artifacts
+apps/web/.next
+apps/whatsapp-service/dist
+
+# node_modules (Vercel installs its own)
+node_modules
