@@ -2,10 +2,5 @@
   "buildCommand": "cd apps/web && npx prisma generate && npx next build",
   "outputDirectory": "apps/web/.next",
   "installCommand": "npm install --include=dev",
-  "framework": "nextjs",
-  "functions": {
-    "api/**": {
-      "maxDuration": 60
-    }
-  }
+  "framework": "nextjs"
 }
