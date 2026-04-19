@@ -52,7 +52,7 @@ export function GuestCard({
   }
 
   return (
-    <div className="w-full max-w-md flex flex-col items-center gap-6 animate-slide-up">
+    <div className="w-full flex flex-col items-center gap-6 animate-slide-up">
       {/* The printable card */}
       <div
         ref={cardRef}
