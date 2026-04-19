@@ -32,7 +32,7 @@ export interface GuestBatchItem {
 const WEB_APP_URL = process.env.WEB_APP_URL ?? 'http://localhost:3000';
 const SECRET      = process.env.WHATSAPP_SERVICE_SECRET ?? '';
 
-async function updateMessageStatus(
+export async function updateMessageStatus(
   messageId: string,
   status: 'SENDING' | 'SENT' | 'FAILED',
   sentAt: string | null,

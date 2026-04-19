@@ -8,7 +8,7 @@
  */
 import { Router, Request, Response } from 'express';
 import crypto from 'crypto';
-import { whatsapp, type GuestBatchItem } from './whatsapp';
+import { whatsapp, type GuestBatchItem, updateMessageStatus } from './whatsapp';
 import { logger } from './logger';
 
 const router = Router();
