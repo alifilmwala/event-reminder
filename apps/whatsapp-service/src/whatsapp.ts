@@ -200,7 +200,9 @@ class WhatsAppManager {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const groups: GroupInfo[] = await (this.client as any).pupPage.evaluate(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const chats: any[] = (window as any).Store?.Chat?.getModelsArray() ?? [];
+        const store = (globalThis as any).Store;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const chats: any[] = store?.Chat?.getModelsArray() ?? [];
         return chats
           .filter((c: any) => c.isGroup)
           .map((c: any) => ({
