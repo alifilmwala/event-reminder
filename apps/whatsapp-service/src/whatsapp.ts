@@ -193,17 +193,18 @@ class WhatsAppManager {
     if (this.groupsFetching) return;
     this.groupsFetching = true;
     try {
+      // Wait for the Store to be fully populated after the ready event
+      await sleep(5_000);
+
       logger.info('Pre-fetching WhatsApp groups via store evaluation…');
 
-      // Read directly from the in-memory WhatsApp store — much faster than
-      // getChats() which serializes every message in every chat.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const groups: GroupInfo[] = await (this.client as any).pupPage.evaluate(() => {
+      const result = await (this.client as any).pupPage.evaluate(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const store = (globalThis as any).Store;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const chats: any[] = store?.Chat?.getModelsArray() ?? [];
-        return chats
+        const allChats: any[] = store?.Chat?.getModelsArray() ?? [];
+        const groups = allChats
           .filter((c: any) => c.isGroup)
           .map((c: any) => ({
             id:   c.id?._serialized ?? '',
@@ -216,10 +217,11 @@ class WhatsAppManager {
                 isAdmin: p.isAdmin ?? false,
               })),
           }));
+        return { totalChats: allChats.length, groups };
       });
 
-      this.groupsCache = groups;
-      logger.info('Groups cached', { count: groups.length });
+      logger.info('Store evaluation complete', { totalChats: result.totalChats, groups: result.groups.length });
+      this.groupsCache = result.groups as GroupInfo[];
     } catch (err) {
       logger.warn('Failed to pre-fetch groups', { error: err instanceof Error ? err.message : String(err) });
     } finally {
@@ -235,11 +237,13 @@ class WhatsAppManager {
     if (!this.isReady()) {
       return { ok: false, error: 'WhatsApp client not connected.' };
     }
-    // If cache is already populated, return immediately
     if (this.groupsCache !== null) {
       return { ok: true, groups: this.groupsCache };
     }
-    // Cache miss — fetch now (also covers the race where ready just fired)
+    if (this.groupsFetching) {
+      return { ok: false, error: 'Groups are still loading, retry in a few seconds.' };
+    }
+    // Cache was cleared — re-fetch synchronously
     await this.fetchAndCacheGroups();
     if (this.groupsCache !== null) {
       return { ok: true, groups: this.groupsCache };
