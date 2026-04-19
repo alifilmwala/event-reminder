@@ -193,26 +193,28 @@ class WhatsAppManager {
     if (this.groupsFetching) return;
     this.groupsFetching = true;
     try {
-      logger.info('Pre-fetching WhatsApp groups…');
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('getChats() timed out after 60s')), 60_000),
-      );
-      const chats = await Promise.race([this.client.getChats(), timeoutPromise]);
-      const groups: GroupInfo[] = [];
+      logger.info('Pre-fetching WhatsApp groups via store evaluation…');
 
-      for (const chat of chats) {
-        if (!chat.isGroup) continue;
-        const groupChat = chat as import('whatsapp-web.js').GroupChat;
-        groups.push({
-          id:   groupChat.id._serialized,
-          name: groupChat.name,
-          participants: (groupChat.participants ?? []).map((p) => ({
-            id:      p.id._serialized,
-            mobile:  p.id.user,
-            isAdmin: p.isAdmin ?? false,
-          })),
-        });
-      }
+      // Read directly from the in-memory WhatsApp store — much faster than
+      // getChats() which serializes every message in every chat.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const groups: GroupInfo[] = await (this.client as any).pupPage.evaluate(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const chats: any[] = (window as any).Store?.Chat?.getModelsArray() ?? [];
+        return chats
+          .filter((c: any) => c.isGroup)
+          .map((c: any) => ({
+            id:   c.id?._serialized ?? '',
+            name: c.name ?? c.formattedTitle ?? '',
+            participants: (c.groupMetadata?.participants?.getModelsArray?.() ?? [])
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map((p: any) => ({
+                id:      p.id?._serialized ?? '',
+                mobile:  p.id?.user ?? '',
+                isAdmin: p.isAdmin ?? false,
+              })),
+          }));
+      });
 
       this.groupsCache = groups;
       logger.info('Groups cached', { count: groups.length });
