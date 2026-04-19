@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Guest {
+  id          String    @id @default(uuid())
+  name        String
+  mobile      String    @unique
+  tableNumber String
+  token       String    @unique
+  linkVisited Boolean   @default(false)
+  visitedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  messages    Message[]
+
+  @@map("guests")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  guestId   String
+  status    String   @default("PENDING")
+  sentAt    DateTime?
+  errorMsg  String?
+  retries   Int      @default(0)
+  createdAt DateTime @default(now())
+
+  guest     Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model EventConfig {
+  id          String  @id @default("default")
+  name        String
+  date        DateTime
+  venue       String  @default("")
+  description String  @default("")
+
+  @@map("event_config")
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  scheduledAt DateTime
+  type        String   @default("REMINDER")
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+
+  @@map("schedules")
+}

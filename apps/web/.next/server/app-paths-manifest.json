@@ -1,0 +1,13 @@
+{
+  "/api/internal/schedules/due/route": "app/api/internal/schedules/due/route.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/api/stats/route": "app/api/stats/route.js",
+  "/api/whatsapp/route": "app/api/whatsapp/route.js",
+  "/api/events/route": "app/api/events/route.js",
+  "/api/internal/message/[id]/route": "app/api/internal/message/[id]/route.js",
+  "/api/guests/route": "app/api/guests/route.js",
+  "/(admin)/dashboard/page": "app/(admin)/dashboard/page.js",
+  "/(admin)/guests/page": "app/(admin)/guests/page.js",
+  "/(admin)/whatsapp/page": "app/(admin)/whatsapp/page.js"
+}

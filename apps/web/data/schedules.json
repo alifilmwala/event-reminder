@@ -1,0 +1,23 @@
+[
+  {
+    "id": "2101f8d6-944f-42a9-930c-0a5760b87d11",
+    "scheduledAt": "2026-04-19T07:40:00.000Z",
+    "type": "CUSTOM",
+    "status": "COMPLETED",
+    "createdAt": "2026-04-19T07:37:49.734Z"
+  },
+  {
+    "id": "a3f1c2d4-e5b6-47a8-9c0d-1e2f3a4b5c6d",
+    "scheduledAt": "2026-04-19T08:34:05.572Z",
+    "type": "REMINDER",
+    "status": "COMPLETED",
+    "createdAt": "2026-04-19T08:33:05.572Z"
+  },
+  {
+    "id": "b4e2d3f5-f6c7-58b9-0d1e-2f3a4b5c6d7e",
+    "scheduledAt": "2026-04-19T08:38:34.504Z",
+    "type": "REMINDER",
+    "status": "RUNNING",
+    "createdAt": "2026-04-19T08:37:29.000Z"
+  }
+]

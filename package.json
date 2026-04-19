@@ -1,0 +1,17 @@
+{
+  "name": "event-reminder",
+  "version": "1.0.0",
+  "description": "Production-ready Event WhatsApp Reminder System",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev":    "concurrently \"npm run dev --workspace=apps/web\" \"npm run dev --workspace=apps/whatsapp-service\"",
+    "web:dev": "npm run dev --workspace=apps/web",
+    "wa:dev":  "npm run dev --workspace=apps/whatsapp-service",
+    "build":   "npm run build --workspace=apps/web && npm run build --workspace=apps/whatsapp-service",
+    "lint":    "npm run lint --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

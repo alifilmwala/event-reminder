@@ -1,0 +1,74 @@
+[
+  {
+    "id": "875f5fe9-aba9-4c2a-955e-ccc2f23057bd",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "PENDING",
+    "sentAt": null,
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T07:10:48.683Z"
+  },
+  {
+    "id": "262ee903-cd02-4b07-9ee5-7688b16ad700",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "FAILED",
+    "sentAt": null,
+    "errorMsg": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "retries": 0,
+    "createdAt": "2026-04-19T07:11:00.231Z"
+  },
+  {
+    "id": "70687e87-d567-4122-8c00-444b344e5afc",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "PENDING",
+    "sentAt": null,
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T07:22:39.347Z"
+  },
+  {
+    "id": "4c2d8eaa-56a5-48c6-ac6b-547bcc044c8b",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "PENDING",
+    "sentAt": null,
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T07:22:56.883Z"
+  },
+  {
+    "id": "33ec6e07-d3f5-4b7a-9cc8-6174ca399588",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "PENDING",
+    "sentAt": null,
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T07:25:44.722Z"
+  },
+  {
+    "id": "1ebabe31-126a-48f5-a70f-c52efc466b6a",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "PENDING",
+    "sentAt": null,
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T07:26:50.906Z"
+  },
+  {
+    "id": "30c22305-ced5-4ca9-b901-ca43afa630c9",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "SENT",
+    "sentAt": "2026-04-19T07:27:10.363Z",
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T07:27:10.306Z"
+  },
+  {
+    "id": "1c6a7729-4e2c-4545-a6e1-8e987913adb8",
+    "guestId": "8dfacd36-6931-4258-8137-ccc272691ee6",
+    "status": "SENT",
+    "sentAt": "2026-04-19T08:39:04.097Z",
+    "errorMsg": null,
+    "retries": 0,
+    "createdAt": "2026-04-19T08:39:01.971Z"
+  }
+]
