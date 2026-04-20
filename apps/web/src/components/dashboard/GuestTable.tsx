@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { RefreshCw, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RefreshCw, Search, ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { Badge, statusVariant } from '@/components/ui/Badge';
@@ -33,7 +33,63 @@ export function GuestTable({
   isLoading,
 }: GuestTableProps) {
   const [resendingId, setResendingId] = useState<string | null>(null);
+  const [editGuest,   setEditGuest]   = useState<GuestWithStats | null>(null);
+  const [editName,    setEditName]    = useState('');
+  const [editTable,   setEditTable]   = useState('');
+  const [saving,      setSaving]      = useState(false);
+  const [deleteId,    setDeleteId]    = useState<string | null>(null);
+  const [deleting,    setDeleting]    = useState(false);
   const totalPages = Math.ceil(total / pageSize);
+
+  function openEdit(g: GuestWithStats) {
+    setEditGuest(g);
+    setEditName(g.name);
+    setEditTable(g.tableNumber);
+  }
+
+  async function handleSaveEdit() {
+    if (!editGuest) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/guests/${editGuest.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editName.trim(), tableNumber: editTable.trim() }),
+      });
+      if (res.ok) {
+        toast.success('Guest updated');
+        setEditGuest(null);
+        onRefresh();
+      } else {
+        const d = await res.json();
+        toast.error(d.error ?? 'Update failed');
+      }
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!deleteId) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/guests/${deleteId}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast.success('Guest deleted');
+        setDeleteId(null);
+        onRefresh();
+      } else {
+        const d = await res.json();
+        toast.error(d.error ?? 'Delete failed');
+      }
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   async function handleResend(guestId: string) {
     setResendingId(guestId);
@@ -148,14 +204,30 @@ export function GuestTable({
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        loading={resendingId === g.id}
-                        onClick={() => handleResend(g.id)}
-                      >
-                        Resend
-                      </Button>
+                      <div className="flex items-center gap-1.5">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          loading={resendingId === g.id}
+                          onClick={() => handleResend(g.id)}
+                        >
+                          Resend
+                        </Button>
+                        <button
+                          title="Edit guest"
+                          onClick={() => openEdit(g)}
+                          className="p-1.5 rounded hover:bg-surface-hover text-forest-400 hover:text-green-200 transition-colors"
+                        >
+                          <Pencil size={13} />
+                        </button>
+                        <button
+                          title="Delete guest"
+                          onClick={() => setDeleteId(g.id)}
+                          className="p-1.5 rounded hover:bg-surface-hover text-forest-400 hover:text-red-400 transition-colors"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -188,6 +260,59 @@ export function GuestTable({
             >
               Next <ChevronRight size={14} />
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit modal */}
+      {editGuest && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+          <div className="bg-surface border border-surface-border rounded-lg w-full max-w-sm p-6 space-y-4">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-green-50">Edit Guest</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs text-forest-400 uppercase tracking-wider">Name</label>
+                <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="mt-1" />
+              </div>
+              <div>
+                <label className="text-xs text-forest-400 uppercase tracking-wider">Thaal / Table</label>
+                <Input value={editTable} onChange={(e) => setEditTable(e.target.value)} className="mt-1" />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setEditGuest(null)} className="px-4 py-2 text-xs text-forest-400 hover:text-forest-200 uppercase tracking-wider transition-colors">
+                Cancel
+              </button>
+              <button
+                onClick={() => void handleSaveEdit()}
+                disabled={saving}
+                className="px-4 py-2 bg-brand-500 hover:bg-brand-400 disabled:opacity-50 rounded text-xs text-forest-950 font-bold uppercase tracking-wider transition-colors"
+              >
+                {saving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirmation */}
+      {deleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+          <div className="bg-surface border border-surface-border rounded-lg w-full max-w-sm p-6 space-y-4">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-green-50">Delete Guest</h2>
+            <p className="text-xs text-forest-400">This will permanently delete the guest and all their message history. This cannot be undone.</p>
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setDeleteId(null)} className="px-4 py-2 text-xs text-forest-400 hover:text-forest-200 uppercase tracking-wider transition-colors">
+                Cancel
+              </button>
+              <button
+                onClick={() => void handleDelete()}
+                disabled={deleting}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 rounded text-xs text-white font-bold uppercase tracking-wider transition-colors"
+              >
+                {deleting ? 'Deleting…' : 'Delete'}
+              </button>
+            </div>
           </div>
         </div>
       )}
