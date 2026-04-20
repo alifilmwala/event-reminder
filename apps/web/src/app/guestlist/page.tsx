@@ -1,7 +1,6 @@
 /**
  * /guestlist — Public family guest list
  * No auth required. Shows all guests grouped by thaal (table) with links to their personal cards.
- * Mobile numbers are never exposed.
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -119,14 +118,19 @@ export default async function GuestListPage() {
                       className="flex items-center justify-between px-5 py-4 group transition-colors"
                       style={{ color: 'inherit' }}
                     >
+                      <div className="flex flex-col gap-0.5">
+                        <span
+                          className="text-sm font-medium group-hover:underline"
+                          style={{ color: '#f5f0e8' }}
+                        >
+                          {guest.name}
+                        </span>
+                        <span className="text-xs" style={{ color: '#6fcf97' }}>
+                          {guest.mobile} &nbsp;·&nbsp; Thaal {guest.tableNumber}
+                        </span>
+                      </div>
                       <span
-                        className="text-sm font-medium group-hover:underline"
-                        style={{ color: '#f5f0e8' }}
-                      >
-                        {guest.name}
-                      </span>
-                      <span
-                        className="text-xs opacity-60 group-hover:opacity-100 transition-opacity"
+                        className="text-xs opacity-60 group-hover:opacity-100 transition-opacity ml-4 shrink-0"
                         style={{ color: '#c9a84c' }}
                       >
                         View card →
