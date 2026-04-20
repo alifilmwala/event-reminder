@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { RefreshCw, Search, ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react';
+import { RefreshCw, Search, ChevronLeft, ChevronRight, Pencil, Trash2, Share2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { Badge, statusVariant } from '@/components/ui/Badge';
@@ -33,6 +33,8 @@ export function GuestTable({
   isLoading,
 }: GuestTableProps) {
   const [resendingId, setResendingId] = useState<string | null>(null);
+  const [shareGuest,  setShareGuest]  = useState<GuestWithStats | null>(null);
+  const [copied,      setCopied]      = useState(false);
   const [editGuest,   setEditGuest]   = useState<GuestWithStats | null>(null);
   const [editName,    setEditName]    = useState('');
   const [editTable,   setEditTable]   = useState('');
@@ -214,6 +216,13 @@ export function GuestTable({
                           Resend
                         </Button>
                         <button
+                          title="Share guest card"
+                          onClick={() => { setShareGuest(g); setCopied(false); }}
+                          className="p-1.5 rounded hover:bg-surface-hover text-forest-400 hover:text-brand-400 transition-colors"
+                        >
+                          <Share2 size={13} />
+                        </button>
+                        <button
                           title="Edit guest"
                           onClick={() => openEdit(g)}
                           className="p-1.5 rounded hover:bg-surface-hover text-forest-400 hover:text-green-200 transition-colors"
@@ -263,6 +272,92 @@ export function GuestTable({
           </div>
         </div>
       )}
+
+      {/* Share modal */}
+      {shareGuest && (() => {
+        const link = `${typeof window !== 'undefined' ? window.location.origin : ''}/g/${shareGuest.token}`;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+            <div className="bg-surface border border-surface-border rounded-lg w-full max-w-sm p-6 space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-green-50">Share Guest Card</h2>
+              <p className="text-xs text-forest-400">Send this link to <span className="text-green-200 font-semibold">{shareGuest.name}</span> — it opens their personalized reminder card.</p>
+              <div className="flex items-center gap-2">
+                <input
+                  readOnly
+                  value={link}
+                  className="flex-1 px-3 py-2 text-xs font-mono bg-surface-muted border border-surface-border rounded text-forest-300 focus:outline-none"
+                />
+                <button
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(link);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="px-3 py-2 bg-brand-500 hover:bg-brand-400 rounded text-xs text-forest-950 font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                >
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <div className="flex justify-between items-center pt-1">
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-brand-400 underline underline-offset-2 hover:text-brand-300"
+                >
+                  Preview card ↗
+                </a>
+                <button onClick={() => setShareGuest(null)} className="px-4 py-2 text-xs text-forest-400 hover:text-forest-200 uppercase tracking-wider transition-colors">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Share modal */}
+      {shareGuest && (() => {
+        const link = `${typeof window !== 'undefined' ? window.location.origin : ''}/g/${shareGuest.token}`;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+            <div className="bg-surface border border-surface-border rounded-lg w-full max-w-sm p-6 space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-green-50">Share Guest Card</h2>
+              <p className="text-xs text-forest-400">Send this link to <span className="text-green-200 font-semibold">{shareGuest.name}</span> — it opens their personalized reminder card.</p>
+              <div className="flex items-center gap-2">
+                <input
+                  readOnly
+                  value={link}
+                  className="flex-1 px-3 py-2 text-xs font-mono bg-surface-muted border border-surface-border rounded text-forest-300 focus:outline-none"
+                />
+                <button
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(link);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="px-3 py-2 bg-brand-500 hover:bg-brand-400 rounded text-xs text-forest-950 font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+                >
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <div className="flex justify-between items-center pt-1">
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-brand-400 underline underline-offset-2 hover:text-brand-300"
+                >
+                  Preview card ↗
+                </a>
+                <button onClick={() => setShareGuest(null)} className="px-4 py-2 text-xs text-forest-400 hover:text-forest-200 uppercase tracking-wider transition-colors">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Edit modal */}
       {editGuest && (
