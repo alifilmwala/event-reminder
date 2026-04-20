@@ -22,8 +22,11 @@ export default function SettingsPage() {
       .then((ev: EventConfig) => {
         setEvent(ev);
         setName(ev.name);
-        // Convert ISO to datetime-local input format (YYYY-MM-DDTHH:mm)
-        setDate(ev.date.slice(0, 16));
+        // Convert stored UTC ISO to local datetime-local input format (YYYY-MM-DDTHH:mm)
+        const d = new Date(ev.date);
+        const pad = (n: number) => String(n).padStart(2, '0');
+        const local = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        setDate(local);
         setVenue(ev.venue ?? '');
         setDescription(ev.description ?? '');
       })
