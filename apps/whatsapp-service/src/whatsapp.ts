@@ -193,43 +193,27 @@ class WhatsAppManager {
     if (this.groupsFetching) return;
     this.groupsFetching = true;
     try {
-      // Wait for the Store to be fully populated after the ready event
       await sleep(5_000);
-
-      logger.info('Pre-fetching WhatsApp groups via store evaluation…');
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await (this.client as any).pupPage.evaluate(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const store = (globalThis as any).Store;
-        if (!store) return { error: 'Store not found', totalChats: 0, groups: [] };
-
-        // Backbone.js Collection stores models in .models array
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const allChats: any[] = store?.Chat?.models ?? store?.Chat?.getModelsArray?.() ?? [];
-
-        const groups = allChats
-          .filter((c: any) => c.isGroup)
-          .map((c: any) => ({
-            id:   c.id?._serialized ?? '',
-            name: c.name ?? c.formattedTitle ?? '',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            participants: (c.groupMetadata?.participants?.models ?? c.groupMetadata?.participants?.getModelsArray?.() ?? [])
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              .map((p: any) => ({
-                id:      p.id?._serialized ?? '',
-                mobile:  p.id?.user ?? '',
-                isAdmin: p.isAdmin ?? false,
-              })),
-          }));
-
-        return { totalChats: allChats.length, groups };
-      });
-
-      logger.info('Store evaluation complete', { totalChats: result.totalChats, groups: result.groups.length, storeError: result.error ?? null });
-      this.groupsCache = result.groups as GroupInfo[];
+      logger.info('Fetching WhatsApp groups…');
+      const chats = await this.client.getChats();
+      const groups: GroupInfo[] = chats
+        .filter((c) => c.isGroup)
+        .map((c) => {
+          const g = c as import('whatsapp-web.js').GroupChat;
+          return {
+            id:   g.id._serialized,
+            name: g.name,
+            participants: (g.participants ?? []).map((p) => ({
+              id:      p.id._serialized,
+              mobile:  p.id.user,
+              isAdmin: p.isAdmin ?? false,
+            })),
+          };
+        });
+      this.groupsCache = groups;
+      logger.info('Groups cached', { total: chats.length, groups: groups.length });
     } catch (err) {
-      logger.warn('Failed to pre-fetch groups', { error: err instanceof Error ? err.message : String(err) });
+      logger.warn('Failed to fetch groups', { error: err instanceof Error ? err.message : String(err) });
     } finally {
       this.groupsFetching = false;
     }
